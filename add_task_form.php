@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Task Manager - Add Task</title>
+    <title>Add Task</title>
+    <link rel="stylesheet" href="css/taskmanager.css">
 </head>
 <body>
 
@@ -10,28 +11,43 @@
 <main>
     <h2>Add Task</h2>
 
-    <<form action="add_task.php" method="post">
+    <form action="add_task.php" method="post" enctype="multipart/form-data">
 
-    <label>Task Name:</label>
-    <input type="text" name="taskName" required>
-    <br><br>
+        <p>
+            Task Name:<br>
+            <input type="text" name="taskName" required>
+        </p>
 
-    <label>Category:</label>
-    <input type="text" name="category" required>
-    <br><br>
+        <p>
+            Category:<br>
+            <input type="text" name="category" required>
+        </p>
 
-    <label>Due Date:</label>
-    <input type="date" name="dueDate">
-    <br><br>
+        <p>
+            Due Date:<br>
+            <input type="date" name="dueDate" required>
+        </p>
 
-    <label>Status:</label>
-    <select name="status" required>
-        <option value="Not Started">Not Started</option>
-        <option value="In Progress">In Progress</option>
-        <option value="Done">Done</option>
-    </select>
-    <br><br>
+        <p>
+            Status:<br>
+            <select name="status">
+                <option value="Not Started">Not Started</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Done">Done</option>
+            </select>
+        </p>
 
-    <input type="submit" value="Add Task">
+        <p>
+            Image:<br>
+            <input type="file" name="image">
+        </p>
 
-</form>
+        <p>
+            <input type="submit" value="Add Task">
+            <a href="index.php">Cancel</a>
+        </p>
+
+    </form>
+</main>
+
+<?php include("footer.php"); ?>
