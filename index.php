@@ -1,71 +1,81 @@
 <?php
 require("database.php");
 
-$queryTasks = '
-    SELECT taskID, taskName, category, dueDate, status
-    FROM tasks
-    ORDER BY dueDate';
+$queryTasks = "
+SELECT
+  t.taskID,
+  t.taskName,
+  c.categoryName,
+  t.dueDate,
+  t.status,
+  t.imageName
+FROM tasks t
+JOIN categories c ON t.categoryID = c.categoryID
+ORDER BY t.dueDate
+";
 
 $statement = $db->prepare($queryTasks);
 $statement->execute();
-$tasks = $statement->fetchAll();
+$tasks = $statement->fetchAll(PDO::FETCH_ASSOC);
 $statement->closeCursor();
 ?>
-
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Task Manager - Home</title>
-    <link rel="stylesheet" href="css/taskmanager.css">
+  <title>Task Manager - Home</title>
+  <link rel="stylesheet" href="css/taskmanager.css">
 </head>
-
 <body>
 
 <?php include("header.php"); ?>
 
 <main>
-    <h2>Task List</h2>
-    <p><a href="add_task_form.php">Add Task</a></p>
+  <h2>Task List</h2>
+  <p><a href="add_task_form.php">Add Task</a></p>
 
-    <table>
-        <tr>
-            <th>Task</th>
-            <th>Category</th>
-            <th>Due Date</th>
-            <th>Status</th>
-            <th>Delete</th>
-        </tr>
+  <table>
+    <tr>
+      <th>Task</th>
+      <th>Category</th>
+      <th>Due Date</th>
+      <th>Status</th>
+      <th>Image</th>
+      <th>Actions</th>
+    </tr>
 
-        <?php foreach ($tasks as $task): ?>
-            <tr>
-                <td><?php echo htmlspecialchars($task['taskName']); ?></td>
-                <td><?php echo htmlspecialchars($task['category']); ?></td>
-                <td><?php echo htmlspecialchars($task['dueDate']); ?></td>
+    <?php foreach ($tasks as $task): ?>
+      <tr>
+        <td>
+          <a href="task_details.php?taskID=<?php echo (int)$task['taskID']; ?>">
+            <?php echo htmlspecialchars($task['taskName']); ?>
+          </a>
+        </td>
+        <td><?php echo htmlspecialchars($task['categoryName']); ?></td>
+        <td><?php echo htmlspecialchars($task['dueDate']); ?></td>
+        <td><?php echo htmlspecialchars($task['status']); ?></td>
 
-                <td>
-                    <form action="update_status.php" method="post">
-                        <input type="hidden" name="taskID" value="<?php echo $task['taskID']; ?>">
+        <td>
+          <img
+            src="images/<?php echo htmlspecialchars($task['imageName']); ?>"
+            alt="Task image"
+            width="80"
+            onerror="this.src='images/placeholder.png';"
+          >
+        </td>
 
-                        <select name="status" onchange="this.form.submit()">
-                            <option value="Not Started" <?php if ($task['status'] === 'Not Started') echo 'selected'; ?>>Not Started</option>
-                            <option value="In Progress" <?php if ($task['status'] === 'In Progress') echo 'selected'; ?>>In Progress</option>
-                            <option value="Done" <?php if ($task['status'] === 'Done') echo 'selected'; ?>>Done</option>
-                        </select>
-                    </form>
-                </td>
+        <td>
+          <a href="update_task_form.php?taskID=<?php echo (int)$task['taskID']; ?>">Edit</a>
 
-                <td>
-                    <form action="delete_task.php" method="post">
-                        <input type="hidden" name="taskID" value="<?php echo $task['taskID']; ?>">
-                        <input type="submit" value="Delete">
-                    </form>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
+          <form action="delete_task.php" method="post" style="display:inline;">
+            <input type="hidden" name="taskID" value="<?php echo (int)$task['taskID']; ?>">
+            <input type="submit" value="Delete" onclick="return confirm('Delete this task?');">
+          </form>
+        </td>
+      </tr>
+    <?php endforeach; ?>
+  </table>
 </main>
 
 <?php include("footer.php"); ?>
-
 </body>
 </html>
