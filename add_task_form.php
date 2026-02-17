@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION["isLoggedIn"])) {
+    header("Location: login_form.php");
+    die();
+}
 require("database.php");
 
 $query = "SELECT categoryID, categoryName FROM categories ORDER BY categoryName";

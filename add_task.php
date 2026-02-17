@@ -1,6 +1,11 @@
 <?php
 session_start();
+if (!isset($_SESSION["isLoggedIn"])) {
+    header("Location: login_form.php");
+    die();
+}
 require("database.php");
+
 
 $taskName   = trim(filter_input(INPUT_POST, 'taskName'));
 $categoryID = filter_input(INPUT_POST, 'categoryID', FILTER_VALIDATE_INT);
