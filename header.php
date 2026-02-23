@@ -11,16 +11,24 @@ if (session_status() === PHP_SESSION_NONE) {
 </head>
 <body>
 
-<header>
-    <h1>Task Manager System</h1>
-
-    <p>
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <h1>Task Manager System</h1>
       <?php if (isset($_SESSION["isLoggedIn"])): ?>
-        Logged in as <?php echo htmlspecialchars($_SESSION["userName"]); ?> |
-        <a href="logout.php" style="color:white;">Logout</a>
-      <?php else: ?>
-        <a href="login_form.php" style="color:white;">Login</a> |
-        <a href="register_user_form.php" style="color:white;">Register</a>
+        <p class="subtext">Logged in as <?php echo htmlspecialchars($_SESSION["userName"]); ?></p>
       <?php endif; ?>
-    </p>
+    </div>
+
+    <nav class="nav">
+      <?php if (isset($_SESSION["isLoggedIn"])): ?>
+        <a href="index.php">Home</a>
+        <a href="add_task_form.php">Add Task</a>
+        <a href="logout.php">Logout</a>
+      <?php else: ?>
+        <a href="login_form.php">Login</a>
+        <a href="register_user_form.php">Register</a>
+      <?php endif; ?>
+    </nav>
+  </div>
 </header>
